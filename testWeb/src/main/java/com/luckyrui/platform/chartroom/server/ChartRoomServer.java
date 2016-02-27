@@ -28,7 +28,7 @@ public class ChartRoomServer extends NioServer{
 		SocketAddress clientAddr = client.getRemoteAddress();
 		ClientBean crClient = new ClientBean();
 		crClient.setClient(client);
-		crClient.setName("сн©м"+visitorsNo++);
+		crClient.setName("visitor"+visitorsNo++);
 		rwLock.writeLock().lock();
 		clients.put(clientAddr, crClient);
 		rwLock.writeLock().unlock();

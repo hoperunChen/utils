@@ -20,8 +20,9 @@ public class ClientFrame extends JFrame{
 	}
 
 	public void init(){
-		this.setSize(1024,768);
+		this.setSize(1024,738);
 		this.getContentPane().setLayout(null);
+		this.setResizable(false);
 		JPanel contentPanel = new ContentPanel();
 		JPanel userPanel = new UserPanel();
 		JPanel inputPanel = new InputPanel();

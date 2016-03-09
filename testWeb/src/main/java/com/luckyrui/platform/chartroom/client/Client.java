@@ -1,5 +1,10 @@
 package com.luckyrui.platform.chartroom.client;
 
-public class Client {
+import java.io.IOException;
 
+public interface Client {
+	public void start() throws IOException;
+	public void stop();
+	
+	public void send(String msg) throws IOException;
 }

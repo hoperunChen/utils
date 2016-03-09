@@ -20,7 +20,14 @@ public class ChartRoomServer extends NioServer{
 
 	@Override
 	protected void receiveMsg(SocketChannel client, String receiveMsg) throws IOException {
+		SocketAddress clientAddr = client.getRemoteAddress();
+		ClientBean fromCB = clients.get(clientAddr);
+		rwLock.readLock().lock();
+		for (ClientBean cb : clients.values()) {
+			sendMsg(cb.getClient(), fromCB.getName()+":"+receiveMsg);
+		}
 		
+		rwLock.readLock().unlock();
 	}
 
 	@Override
@@ -36,9 +43,10 @@ public class ChartRoomServer extends NioServer{
 
 	@Override
 	protected void clientClose(SocketChannel client) throws IOException {
-		if(clients.containsKey(client)){
+		SocketAddress key = client.getRemoteAddress();
+		if(clients.containsKey(key)){
 			rwLock.writeLock().lock();
-			clients.remove(client);
+			clients.remove(key);
 			rwLock.writeLock().unlock();
 		}
 	}

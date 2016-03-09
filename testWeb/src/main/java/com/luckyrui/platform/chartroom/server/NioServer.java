@@ -14,8 +14,6 @@ import java.util.Set;
 
 import com.luckyrui.platform.constants.ConfigConts;
 import com.luckyrui.platform.utils.PropertiesHandler;
-import com.nio.EchoServer;
-import com.nio.EchoServer.SelectorLoop;
 
 public abstract class NioServer implements Server {
 
@@ -23,7 +21,7 @@ public abstract class NioServer implements Server {
 	private Integer port;
 
 	public static SelectorLoop connectionBell;
-	public static SelectorLoop readBell;
+//	public static SelectorLoop readBell;
 	public boolean isReadBellRunning = false;
 
 	public NioServer() {
@@ -36,7 +34,7 @@ public abstract class NioServer implements Server {
 		// 一个连接轮询线程类,当有新的客户端连接时触发
 		connectionBell = new SelectorLoop();
 		// 一个消息轮序线程类,但有新消息时触发
-		readBell = new SelectorLoop();
+//		readBell = new SelectorLoop();
 
 		//打开一个服务端通道
 		ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
@@ -61,7 +59,7 @@ public abstract class NioServer implements Server {
 	@Override
 	public void stop() {
 		connectionBell.close();
-		readBell.close();
+//		readBell.close();
 		System.exit(0);
 	}
 
@@ -76,6 +74,11 @@ public abstract class NioServer implements Server {
 	}
 	
 	
+	/**
+	 * 客户端关闭事件
+	 * @param client
+	 * @throws IOException
+	 */
 	protected abstract void clientClose(SocketChannel client)
 			throws IOException;
 
@@ -178,14 +181,18 @@ public abstract class NioServer implements Server {
 
 				// 对新的连接的channel注册read事件. 使用readBell闹钟.
 				client.configureBlocking(false);
+				SelectorLoop readBell = new SelectorLoop();
 				client.register(readBell.getSelector(), SelectionKey.OP_READ);
+				//如果使用一个readBell 会导致 堵塞在监听上
+				new Thread(readBell).start();
+				System.out.println(client.getRemoteAddress()+"-->已经开始监听");
 				// 如果读取线程还没有启动,那就启动一个读取线程.
-				synchronized (NioServer.this) {
-					if (!NioServer.this.isReadBellRunning) {
-						NioServer.this.isReadBellRunning = true;
-						new Thread(readBell).start();
-					}
-				}
+//				synchronized (NioServer.this) {
+//					if (!NioServer.this.isReadBellRunning) {
+//						NioServer.this.isReadBellRunning = true;
+//						new Thread(readBell).start();
+//					}
+//				}
 
 			} else if (key.isReadable()) {
 				// 这是一个read事件,并且这个事件是注册在socketchannel上的.
@@ -207,9 +214,10 @@ public abstract class NioServer implements Server {
 						.toString();
 				System.out.println("receive message -->"
 						+ client.getRemoteAddress() + ":" + msg);
-
 				// 清空buffer
 				receivebuffer.clear();
+				receiveMsg(client, msg);
+//				client.register(readBell.getSelector(), SelectionKey.OP_READ);
 			}
 		}
 

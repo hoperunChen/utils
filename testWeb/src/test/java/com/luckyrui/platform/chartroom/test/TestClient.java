@@ -1,0 +1,1 @@
+package com.luckyrui.platform.chartroom.test;import javax.swing.JFrame;import com.luckyrui.platform.chartroom.client.frame.ClientFrame;public class TestClient {	public static void main(String[] args) {		ClientFrame cf = new ClientFrame();		cf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		cf.setVisible(true);	}}

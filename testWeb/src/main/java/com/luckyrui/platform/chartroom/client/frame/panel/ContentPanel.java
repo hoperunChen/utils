@@ -39,22 +39,13 @@ public class ContentPanel extends ChartPanel{
 		JScrollPane jsp = new JScrollPane(chartText,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		jsp.setPreferredSize(new Dimension(FrameConts.CONTENT_PANEL_WIDTH,FrameConts.CONTENT_PANEL_HEIGHT-5));
 		this.add(jsp);
-		new Thread(){
-			
-			public void run() {
-				while (true) {
-					chartText.append("\nhhh");
-					if(MidVar.isScroll())
-						chartText.setCaretPosition(chartText.getText().length()); 
-					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-				
-			};
-		}.start();
+	}
+
+	public void addMsg(String receiveMsg) {
+		chartText.append(receiveMsg+"\n");
+		//滚到最底部 (MidVar.isScroll():是否允许滚动)
+		if(MidVar.isScroll())
+			chartText.setCaretPosition(chartText.getText().length()); 
 	}
 
 

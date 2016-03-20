@@ -56,7 +56,7 @@ public class ClientFrame extends JFrame {
 	}
 	
 	public void showUsers(JSONArray users){
-		userPanel.showUsers();
+		userPanel.showUsers(users);
 	}
 
 }

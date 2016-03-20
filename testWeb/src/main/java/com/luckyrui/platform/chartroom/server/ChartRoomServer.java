@@ -101,7 +101,7 @@ public class ChartRoomServer extends NioServer {
 					String msg = Constants.MSG_FN_ID + Constants.MSG_FN_GET_USER + jArray.toJSONString();
 					try {
 						sendToEveryOne(msg);
-						Thread.sleep(1000*10);
+						Thread.sleep(1000);
 					} catch (IOException e) {
 						e.printStackTrace();
 					} catch (InterruptedException e) {

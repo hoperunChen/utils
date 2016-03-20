@@ -2,10 +2,11 @@ package com.luckyrui.platform.chartroom.client.frame.panel;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 
 import javax.swing.JButton;
-import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
 import com.luckyrui.platform.chartroom.client.Client;
@@ -22,6 +23,9 @@ public class InputPanel extends ChartPanel{
 	private static final long serialVersionUID = 1518941263934027629L;
 	
 	JTextArea inputText;
+	
+	int beforKeyCode = -1;
+	
 	public InputPanel(){
 		super(FrameConts.INPUT_PANEL_WIDTH,FrameConts.INPUT_PANEL_HEIGHT);
 	}
@@ -55,15 +59,27 @@ public class InputPanel extends ChartPanel{
 			}
 			
 		});
+		inputText.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				int keycode = e.getKeyCode();
+				if(keycode==10)
+					if(beforKeyCode == 157)
+						sendMessage();
+				beforKeyCode = keycode;
+				super.keyPressed(e);
+			}
+			
+		});
 	}
 	
 	private void sendMessage() {
 		String msg = inputText.getText();
-		JOptionPane.showMessageDialog(null,msg );
+//		JOptionPane.showMessageDialog(null,msg );
 		try {
 			client.send(msg);
+			inputText.setText("");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

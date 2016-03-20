@@ -49,9 +49,12 @@ public abstract class NioServer implements Server {
 				SelectionKey.OP_ACCEPT);
 		System.out.println("Server Start -->" + ipAddr + ":" + port);
 		new Thread(connectionBell).start();
+		init();
 		// listen();
 
 	}
+
+	protected abstract void init();
 
 	/**
 	 * Í£Ö¹·şÎñÆ÷
